@@ -1,6 +1,8 @@
 
 package ayed_obligatorio;
 
+import java.util.Date;
+
 public class ListaMensaje extends Lista{
     NodoMensaje primero;
     NodoMensaje ultimo;
@@ -38,8 +40,9 @@ public class ListaMensaje extends Lista{
         this.cantNodos++;
     }
     
-    public void agregarfinal(int dato) {
+    public void agregarfinal(int dato, Date fecha) {
         NodoMensaje nuevo = new NodoMensaje(dato);
+        nuevo.setFecha(fecha);
         if (this.esVacia()) {
             this.setPrimero(nuevo);
             this.setUltimo(nuevo);
@@ -49,7 +52,8 @@ public class ListaMensaje extends Lista{
         }
         this.cantNodos++;
     }
-    
+    /*
+    //TODO: Ver el agregar final si tiene fecha
     public void agregarordenado(int dato) {
         if (this.esVacia()|| dato < this.getPrimero().getDato()){
             this.agregarinicio(dato);
@@ -67,7 +71,7 @@ public class ListaMensaje extends Lista{
                 this.cantNodos++;
             }                        
         }
-    }
+    }*/
     
     @Override
     public void borrarinicio() {
