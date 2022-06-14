@@ -3,31 +3,31 @@ package ayed_obligatorio;
 import java.util.Date;
 
 public class SistemaObligatorio implements ISistemaObligatorio {
-    
+
     public ListaContacto contactos;
     public ListaDiccionario diccionario;
     public int MAX_PALABRAS_X_LINEA;
-    
+
     public ListaContacto getContactos() {
         return contactos;
     }
-    
+
     public void setContactos(ListaContacto contactos) {
         this.contactos = contactos;
     }
-    
+
     public ListaDiccionario getDiccionario() {
         return diccionario;
     }
-    
+
     public void setDiccionario(ListaDiccionario diccionario) {
         this.diccionario = diccionario;
     }
-    
+
     public int getMAX_PALABRAS_X_LINEA() {
         return MAX_PALABRAS_X_LINEA;
     }
-    
+
     public void setMAX_PALABRAS_X_LINEA(int MAX_PALABRAS_X_LINEA) {
         this.MAX_PALABRAS_X_LINEA = MAX_PALABRAS_X_LINEA;
     }
@@ -42,19 +42,19 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         this.setContactos(new ListaContacto());
         this.setMAX_PALABRAS_X_LINEA(MAX_PALABRAS_X_LINEA);
         this.setDiccionario(new ListaDiccionario());
-        
+
         return ret;
     }
-    
+
     @Override
     public Retorno destruirSistemaMensajes() {
         Retorno ret = null;
         this.setContactos(null);
         this.setDiccionario(null);
-        
+
         return ret;
     }
-    
+
     @Override
     public Retorno agregarContacto(int numero, String nombre) {
         Retorno ret = new Retorno(Retorno.Resultado.NO_IMPLEMENTADA);
@@ -66,7 +66,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         }
         return ret;
     }
-    
+
     @Override
     public Retorno eliminarContacto(int numero) {
         if (contactos.buscarelemento(numero) == true) {
@@ -76,18 +76,18 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             return new Retorno(Retorno.Resultado.ERROR);
         }
     }
-    
+
     @Override
     public Retorno agregarMensaje(int numOrigen, int numDestino, Date fecha) {
         NodoContacto destino = contactos.obtenerPunteroElemento(numDestino);//puntero del elemento
         if (destino != null) { //si existe este puntero
-            destino.getLm().agregarfinal(destino.getLm().cantNodos+1, fecha); //agrego el numero destino 
+            destino.getLm().agregarfinal(destino.getLm().cantNodos + 1, fecha); //agrego el numero destino 
             return new Retorno(Retorno.Resultado.OK);
         } else {
             return new Retorno(Retorno.Resultado.ERROR);
         }
     }
-    
+
     @Override
     public Retorno eliminarMensaje(int numOrigen, int numMsj) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
@@ -98,24 +98,23 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             return new Retorno(Retorno.Resultado.ERROR);
         }
     }
-    
+
     @Override
     public Retorno imprimirTexto(int numOrigen, int numMsj) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen); //obtengo el contacto origen
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {  //verifico que exista el num msj en la listamsj del origen
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);  //me traigo el nodomsj del nummsj deseado
             ListaLinea ll = msj.getLl();  //me traigo la lista de lineas de ese nummsj
-            NodoLinea linea = ll.getPrimero(); //me posiciono en el primer nodo de la lista de linas
-            if (linea != null) {
-                while (linea.siguiente != null) { //recorro la listalinea para acceder a la listapalabra de cada linea
-                    ListaPalabra lp = linea.getLp();
-                    if (!lp.esVacia()) {
-                        lp.listar();
-                    }
-                    linea = linea.siguiente;
-                }
-            } else { //Si la linea es vacia retornamos Texto vacio
+            if (ll.esVacia()) {
                 System.out.print("Texto vacio");
+            } else {
+                NodoLinea nl = ll.primero;
+                for (int i = 0; i < ll.cantNodos; i++) {
+                    System.out.print(i + 1 + ". ");
+                    nl.getLp().listar();
+                    System.out.print("\n");
+                    nl = nl.siguiente;
+                }
             }
             return new Retorno(Retorno.Resultado.OK);
         }
@@ -134,19 +133,19 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         }
         return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno insertarLineaPos(int numOrigen, int numMsj, int posLinea) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {
-            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);//ver obpunteroele
             ListaLinea ll = msj.getLl();
             ll.agregarordenado(posLinea);
             return new Retorno(Retorno.Resultado.OK); //Si existe el contacto y existe el msj, el agregarordenado de la listalinea se encarga del insertar la linea
         }
         return new Retorno(Retorno.Resultado.ERROR); //Si no existe alguno, entonces no existe la listalinea para insertar
     }
-    
+
     @Override
     public Retorno borrarLinea(int numOrigen, int numMsj, int posLinea) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
@@ -162,7 +161,8 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         }
         return new Retorno(Retorno.Resultado.ERROR); //No existe el contacto
     }
-    
+
+    //Se hace con recursividad
     @Override
     public Retorno borrarTodo(int numOrigen, int numMsj) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
@@ -176,18 +176,21 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         }
         return new Retorno(Retorno.Resultado.ERROR); //No existe el contacto, no existe el nummsj
     }
-    
+
     @Override
     public Retorno borrarOcurrenciasPalabraEnTexto(int numOrigen, int numMsj, String palabraABorrar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public Retorno insertarPlabraEnLinea(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
+            if (ll.obtenerPunteroElemento(posLinea).getLp().cantNodos >= 3) {
+                return new Retorno(Retorno.Resultado.ERROR);
+            }
             if (ll.buscarelemento(posLinea)) {
                 NodoLinea linea = ll.obtenerPunteroElemento(posLinea);
                 linea.getLp().agregarordenado(posPalabra, palabraAIngresar);
@@ -196,50 +199,109 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         }
         return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno insertarPalabraYDesplazar(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public Retorno borrarPalabra(int numOrigen, int numMsj, int posLinea, int posPalabra) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
+        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
+            ListaLinea ll = msj.getLl();
+            if (ll.buscarelemento(posLinea)) {
+                NodoLinea linea = ll.obtenerPunteroElemento(posLinea);
+                NodoPalabra nodo = linea.getLp().obtenerPunteroElemento(posPalabra);
+                linea.getLp().borrarElemento(nodo.dato);
+                return new Retorno(Retorno.Resultado.OK);
+            }
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno borrarOcurrenciasPalabraEnLinea(int numOrigen, int numMsj, int posLinea, String palabraABorrar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
+        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
+            ListaLinea ll = msj.getLl();
+            if (ll.buscarelemento(posLinea)) {
+                NodoLinea linea = ll.obtenerPunteroElemento(posLinea);
+                ListaPalabra lp = linea.getLp();
+                if(!lp.esVacia()){
+                    NodoPalabra np = lp.getPrimero();
+                    NodoPalabra palabra = lp.obtenerPunteroPalabra(palabraABorrar);
+                    for(int i = 0; i < lp.cantNodos+1; i++){                        
+                        if(np.getPalabra() == palabraABorrar){
+                            lp.borrarElemento(np.dato);
+                        }
+                        np = np.getSiguiente();
+                    }
+                }
+                return new Retorno(Retorno.Resultado.OK);
+            }
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
+    //Imprime la línea con todas sus palabras. Se debe imprimir el número de línea según
+    //muestra el ejemplo. La posicionLinea es válida solamente si posicionLinea existe en el texto
     @Override
     public Retorno imprimirLinea(int numOrigen, int numMsj, int posLinea) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen); //obtengo el contacto origen
+        if (origen != null && origen.getLm().buscarelemento(numMsj)) {  //verifico que exista el num msj en la listamsj del origen
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);  //me traigo el nodomsj del nummsj deseado
+            ListaLinea ll = msj.getLl();  //me traigo la lista de lineas de ese nummsj
+            NodoLinea nl = ll.obtenerPunteroElemento(posLinea);
+            nl.getLp().listar();
+            return new Retorno(Retorno.Resultado.OK);
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno ingresarPalabraDiccionario(String palabraAIngresar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!diccionario.buscarPalabra(palabraAIngresar)) {
+            diccionario.agregarfinal(0, palabraAIngresar);
+            return new Retorno(Retorno.Resultado.OK);
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno borrarPalabraDiccionario(String palabraABorrar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (diccionario.buscarPalabra(palabraABorrar)) {
+            diccionario.borrarPalabra(palabraABorrar);
+            return new Retorno(Retorno.Resultado.OK);
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
-    
+
     @Override
     public Retorno imprimirDiccionario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!diccionario.esVacia()) {
+            NodoDiccionario key = diccionario.getPrimero();
+            for (int i = 0; i < diccionario.cantNodos; i++) {
+                //TODO: Hay que mostralo ordenado
+                System.out.print(key.palabra + "\n");
+                key = key.getSiguiente();
+            }
+        } else {
+            System.out.print("Diccionario vacio \n");
+        }
+        return new Retorno(Retorno.Resultado.OK);
     }
-    
+
     @Override
     public Retorno imprimirTextoIncorrecto() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public Retorno cantMensajes(int numOrigen) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
