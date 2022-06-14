@@ -125,6 +125,18 @@ public class ListaDiccionario extends Lista{
         return encontrado;
     }
     
+    public boolean buscarPalabra(String palabra) {
+        boolean encontrado = false;
+        NodoDiccionario aux = this.getPrimero();
+        while (aux != null && !encontrado) {
+            if (aux.getPalabra() == palabra) {
+                encontrado = true;
+            }
+            aux = aux.siguiente;
+        }
+        return encontrado;
+    }
+    
     @Override
     public NodoDiccionario obtenerPunteroElemento(int dato) {
         NodoDiccionario encontrado = null;
@@ -150,6 +162,29 @@ public class ListaDiccionario extends Lista{
             } else {
                 while (aux.siguiente != null && !borrado) {
                     if (aux.siguiente.getDato() == dato) {
+                        aux.siguiente = aux.siguiente.siguiente;
+                        borrado = true;
+                        this.cantNodos--;
+                        return borrado;
+                    }
+                    aux = aux.siguiente;
+                }
+            }
+        }
+        return borrado;
+    }
+    
+    public boolean borrarPalabra(String palabra) {
+        boolean borrado = false;
+        if (!this.esVacia()) {
+            NodoDiccionario aux = this.getPrimero();        
+            if (aux.getPalabra()== palabra ) {
+                this.setPrimero(this.primero.siguiente);
+                borrado = true;
+                this.cantNodos--;
+            } else {
+                while (aux.siguiente != null && !borrado) {
+                    if (aux.siguiente.getPalabra() == palabra) {
                         aux.siguiente = aux.siguiente.siguiente;
                         borrado = true;
                         this.cantNodos--;

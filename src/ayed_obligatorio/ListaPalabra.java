@@ -120,7 +120,7 @@ public class ListaPalabra extends Lista{
         if (!this.esVacia()) {
             NodoPalabra aux = this.getPrimero();
             while (aux != null) {
-                System.out.print(aux.getDato() + " - ");
+                System.out.print(aux.getPalabra() + " ");
                 aux = aux.getSiguiente();
             }
             System.out.println();
@@ -146,6 +146,18 @@ public class ListaPalabra extends Lista{
         NodoPalabra aux = this.getPrimero();
         while (aux != null && encontrado == null) {
             if (aux.getDato() == dato) {
+                encontrado = aux;
+            }
+            aux = aux.siguiente;
+        }
+        return encontrado;
+    }
+    
+    public NodoPalabra obtenerPunteroPalabra(String palabra) {
+        NodoPalabra encontrado = null;
+        NodoPalabra aux = this.getPrimero();
+        while (aux != null && encontrado == null) {
+            if (aux.getPalabra()== palabra) {
                 encontrado = aux;
             }
             aux = aux.siguiente;
