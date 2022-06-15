@@ -110,10 +110,12 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             } else {
                 NodoLinea nl = ll.primero;
                 for (int i = 0; i < ll.cantNodos; i++) {
-                    System.out.print(i + 1 + ". ");
-                    nl.getLp().listar();
-                    System.out.print("\n");
-                    nl = nl.siguiente;
+                    if (nl != null) {
+                        System.out.print(i + 1 + ". ");
+                        nl.getLp().listar();
+                        System.out.print("\n");
+                        nl = nl.siguiente;
+                    }
                 }
             }
             return new Retorno(Retorno.Resultado.OK);
@@ -132,13 +134,14 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             NodoLinea nodoPrimero = ll.getPrimero();
             insertar(nodoPrimero, ll);
             return new Retorno(Retorno.Resultado.OK);
+
         }
         return new Retorno(Retorno.Resultado.ERROR);
     }
 
     public static void insertar(NodoLinea nodo, ListaLinea ll) {
         if (nodo == null) {
-            ll.agregarfinal();
+            ll.agregarfinal(1);
         } else {
             if (nodo.siguiente == null) {
                 ll.agregarfinal(nodo.dato + 1);
@@ -151,7 +154,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno insertarLineaPos(int numOrigen, int numMsj, int posLinea) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos+1 >= posLinea) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);//ver obpunteroele
             ListaLinea ll = msj.getLl();
             ll.agregarordenado(posLinea);
@@ -163,7 +166,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno borrarLinea(int numOrigen, int numMsj, int posLinea) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos >= posLinea) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
             if (!ll.esVacia()) {
