@@ -123,7 +123,6 @@ public class ListaPalabra extends Lista{
                 System.out.print(aux.getPalabra() + " ");
                 aux = aux.getSiguiente();
             }
-            System.out.println();
         }
     }
     

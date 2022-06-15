@@ -141,5 +141,40 @@ public class AyED_Obligatorio {
         //Resultado OK - Borrar todas las lineas del mensaje (forma recursiva)
         //Parametros (int numOrigen, int numMsj)
         p.ver(so.borrarTodo(2, 1).resultado, Retorno.Resultado.OK, "Borramos todas las lineas mensaje 1 de Pedro");
+   
+    //3.7
+    System.out.println("##################################################################################3.7");
+        //Resultado OK - Insertar Palabra en Linea 
+        //Parametros (int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar)
+        //Mostramos mensaje 2 de Pedro, sin palabras
+        System.out.print("Mensaje 2 de pedro \n");
+        so.imprimirTexto(2, 2);
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "Hola").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "Hola").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "estas?").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+
+
+
+        //Mostramos mensaje 2 de Pedro con palabra agregada
+        System.out.print("Mensaje 2 de pedro \n");
+        so.imprimirTexto(2, 2);
+
+        //Resultado ERROR - Insertar Palabra en linea con contacto que no existe, no existe el mensaje, linea no valida, maximo 3 palabras por linea
+        p.ver(so.insertarPlabraEnLinea(8, 2, 1, 1, "Hola").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, no existe contacto");
+        p.ver(so.insertarPlabraEnLinea(2, 8, 1, 1, "Hola").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, no existe mensaje");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 8, 1, "Hola").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, no existe linea");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "prueba").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, maximo 3 por linea");
+    
+    //3.6
+    System.out.println("##################################################################################3.6");  
+        so.insertarPlabraEnLinea(2, 2, 2, 1, "Prueba");
+        so.insertarPlabraEnLinea(2, 2, 2, 2, "Prueba");
+        so.imprimirTexto(2, 2);
+        //Resultado OK - Si se pudieron borrar las ocurrencias de la palabra con éxito.
+        //Parametros (int numOrigen, int numMsj, String palabraABorrar)
+        p.ver(so.borrarOcurrenciasPalabraEnTexto(2, 2, "Prueba").resultado, Retorno.Resultado.OK, "Se borro la palabra");
+        System.out.print("Mensaje 1 de pedro \n");
+        so.imprimirTexto(2, 2);
     }
+    
 }

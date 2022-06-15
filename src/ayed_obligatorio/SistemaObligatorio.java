@@ -141,10 +141,16 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     public static void insertar(NodoLinea nodo, ListaLinea ll) {
         if (nodo == null) {
-            ll.agregarfinal(1);
+            NodoLinea nuevo = new NodoLinea(1);
+            ll.setPrimero(nuevo);
+            ll.setUltimo(nuevo);
+            ll.cantNodos++;
         } else {
             if (nodo.siguiente == null) {
-                ll.agregarfinal(nodo.dato + 1);
+                NodoLinea nuevo = new NodoLinea(nodo.dato + 1);
+                ll.ultimo.setSiguiente(nuevo);
+                ll.setUltimo(nuevo);
+                ll.cantNodos++;
             } else {
                 insertar(nodo.getSiguiente(), ll);
             }
@@ -203,13 +209,53 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno borrarOcurrenciasPalabraEnTexto(int numOrigen, int numMsj, String palabraABorrar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
+        if(origen != null && origen.getLm().buscarelemento(numMsj)){
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
+            ListaLinea ll = msj.getLl();
+            if(!ll.esVacia()){
+                ocurrencia(ll.getPrimero(), ll, palabraABorrar);
+                
+                return new Retorno(Retorno.Resultado.OK);
+            }
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
 
+    public static void ocurrencia(NodoLinea nodo, ListaLinea ll, String palabra){
+        if(nodo.siguiente == null){
+            ListaPalabra lp = nodo.getLp();
+            if(!lp.esVacia()){
+                NodoPalabra np = lp.getPrimero();
+                NodoPalabra p = lp.obtenerPunteroPalabra(palabra);
+                for (int i = 0; i < lp.cantNodos+1 && np != null; i++){                    
+                    if (np.getPalabra() == palabra){
+                        lp.borrarElemento(np.dato);
+                    }
+                    np = np.getSiguiente();
+                }               
+            } 
+        } else {            
+            NodoLinea nd = nodo.siguiente;
+            ocurrencia(nd, ll, palabra);
+            ListaPalabra lp = nodo.getLp();
+            if(!lp.esVacia()){
+                NodoPalabra np = lp.getPrimero();
+                NodoPalabra p = lp.obtenerPunteroPalabra(palabra);
+                for (int i = 0; i < lp.cantNodos+1 && np != null; i++){
+                    if (np.getPalabra() == palabra){
+                        lp.borrarElemento(np.dato);
+                    }
+                    np = np.getSiguiente();
+                }               
+            } 
+        }
+    }
+    
     @Override
     public Retorno insertarPlabraEnLinea(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && posLinea <= origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
             if (ll.obtenerPunteroElemento(posLinea).getLp().cantNodos >= 3) {
@@ -257,7 +303,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
                 if (!lp.esVacia()) {
                     NodoPalabra np = lp.getPrimero();
                     NodoPalabra palabra = lp.obtenerPunteroPalabra(palabraABorrar);
-                    for (int i = 0; i < lp.cantNodos + 1; i++) {
+                    for (int i = 0; i < lp.cantNodos + 1 && np != null; i++) {
                         if (np.getPalabra() == palabraABorrar) {
                             lp.borrarElemento(np.dato);
                         }
