@@ -105,7 +105,7 @@ public class ListaContacto extends Lista{
         if (!this.esVacia()) {
             NodoContacto aux = this.getPrimero();
             while (aux != null) {
-                System.out.print(aux.getDato() + " - ");
+                System.out.print(aux.getDato() + " - " + aux.getNombre() + "\n");
                 aux = aux.getSiguiente();
             }
             System.out.println();
