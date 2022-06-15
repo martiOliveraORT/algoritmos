@@ -304,6 +304,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
                     NodoPalabra np = lp.getPrimero();
                     NodoPalabra palabra = lp.obtenerPunteroPalabra(palabraABorrar);
                     for (int i = 0; i < lp.cantNodos + 1 && np != null; i++) {
+
                         if (np.getPalabra() == palabraABorrar) {
                             lp.borrarElemento(np.dato);
                         }
