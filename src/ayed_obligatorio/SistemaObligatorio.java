@@ -91,7 +91,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno eliminarMensaje(int numOrigen, int numMsj) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen.getLm().buscarelemento(numMsj)) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
             origen.getLm().borrarElemento(numMsj);
             return new Retorno(Retorno.Resultado.OK);
         } else {
@@ -106,7 +106,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);  //me traigo el nodomsj del nummsj deseado
             ListaLinea ll = msj.getLl();  //me traigo la lista de lineas de ese nummsj
             if (ll.esVacia()) {
-                System.out.print("Texto vacio");
+                System.out.print("Texto vacio \n");
             } else {
                 NodoLinea nl = ll.primero;
                 for (int i = 0; i < ll.cantNodos; i++) {
@@ -122,16 +122,30 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     }
 
     //Hacerlo con recursividad, encontrar los axiomas
+    //Inserta una nueva línea vacía al final del texto
     @Override
     public Retorno insertarLinea(int numOrigen, int numMsj) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {
-            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
-            msj.getLl().agregarfinal(msj.getLl().getUltimo().getDato() + 1); //deberia pasar un dato(?? 
-            //suponiendo que el dato de la linea lo ubica en la posicion, le envio como dato a la nueva linea la posicion del que estaba ultimo+1
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);//ver obpunteroele
+            ListaLinea ll = msj.getLl();
+            NodoLinea nodoPrimero = ll.getPrimero();
+            insertar(nodoPrimero, ll);
             return new Retorno(Retorno.Resultado.OK);
         }
         return new Retorno(Retorno.Resultado.ERROR);
+    }
+
+    public static void insertar(NodoLinea nodo, ListaLinea ll) {
+        if (nodo == null) {
+            ll.agregarfinal();
+        } else {
+            if (nodo.siguiente == null) {
+                ll.agregarfinal(nodo.dato + 1);
+            } else {
+                insertar(nodo.getSiguiente(), ll);
+            }
+        }
     }
 
     @Override
@@ -169,12 +183,19 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
-            if (!ll.esVacia()) {
-                msj.setLl(null);
-                return new Retorno(Retorno.Resultado.OK); //Se pudo borrar
-            }
+            remove(ll.getPrimero(), ll);
+            return new Retorno(Retorno.Resultado.OK);
         }
         return new Retorno(Retorno.Resultado.ERROR); //No existe el contacto, no existe el nummsj
+    }
+
+    public static void remove(NodoLinea nodo, ListaLinea ll) {
+        if (nodo == null) {
+            return;
+        } else {
+            remove(nodo.getSiguiente(), ll);
+            ll.borrarElemento(nodo.dato);
+        }
     }
 
     @Override
@@ -223,18 +244,18 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno borrarOcurrenciasPalabraEnLinea(int numOrigen, int numMsj, int posLinea, String palabraABorrar) {
-         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
         if (origen != null && origen.getLm().buscarelemento(numMsj)) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
             if (ll.buscarelemento(posLinea)) {
                 NodoLinea linea = ll.obtenerPunteroElemento(posLinea);
                 ListaPalabra lp = linea.getLp();
-                if(!lp.esVacia()){
+                if (!lp.esVacia()) {
                     NodoPalabra np = lp.getPrimero();
                     NodoPalabra palabra = lp.obtenerPunteroPalabra(palabraABorrar);
-                    for(int i = 0; i < lp.cantNodos+1; i++){                        
-                        if(np.getPalabra() == palabraABorrar){
+                    for (int i = 0; i < lp.cantNodos + 1; i++) {
+                        if (np.getPalabra() == palabraABorrar) {
                             lp.borrarElemento(np.dato);
                         }
                         np = np.getSiguiente();
