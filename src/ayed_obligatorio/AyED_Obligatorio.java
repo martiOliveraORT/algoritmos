@@ -90,14 +90,19 @@ public class AyED_Obligatorio {
         
     //3.2
     System.out.println("##################################################################################3.2");
+        System.out.println("Vemos mensajes de pedro sin lineas \n");
+        so.imprimirTexto(2, 2);
         //Resultado OK - Insertar linea vacia al final (forma recursiva)
         //Parametros (int numOrigen, int numMsj)
         p.ver(so.insertarLinea(2, 2).resultado, Retorno.Resultado.OK, "Se agrega linea vacia al final del mensaje nro 2 de Pedro");
         
-        p.ver(so.imprimirTexto(2, 2).resultado, Retorno.Resultado.OK, "Se imprime mensaje 2 de Pedro");
+        //Resultado ERROR - Insertar linea en contacto que no existe, en mensaje que no existe
+        p.ver(so.insertarLinea(8, 2).resultado, Retorno.Resultado.ERROR, "No se puede agregar linea, no existe contacto");
+        p.ver(so.insertarLinea(2, 5).resultado, Retorno.Resultado.ERROR, "No se puede agregar linea, no existe mensaje");
         
-        //TODO: -REVISAR porque no muestra las lineas como el ejemplo 3.1
-        //      -Agregar los casos de error
+        System.out.println("Vemos mensajes de pedro con una linea \n");
+        so.imprimirTexto(2, 2);
+        
         
     //3.3
     System.out.println("##################################################################################3.3");
@@ -106,12 +111,35 @@ public class AyED_Obligatorio {
         p.ver(so.insertarLineaPos(2, 2, 1).resultado, Retorno.Resultado.OK, "Se agrega linea 1 en blanco al mensaje 2 de Pedro");
         
         //Resultado ERROR - Insertar linea en posicion contacto no existe. En mensaje que no existe y en posicion no valida
-        p.ver(so.insertarLineaPos(8, 2, 1).resultado, Retorno.Resultado.OK, "No se puede agregar linea, no existe contacto");
-        p.ver(so.insertarLineaPos(2, 8, 1).resultado, Retorno.Resultado.OK, "No se puede agregar linea, no existe mensaje");
-        p.ver(so.insertarLineaPos(2, 2, 8).resultado, Retorno.Resultado.OK, "No se puede agregar linea, no existe linea");
+        p.ver(so.insertarLineaPos(8, 2, 1).resultado, Retorno.Resultado.ERROR, "No se puede agregar linea, no existe contacto");
+        p.ver(so.insertarLineaPos(2, 8, 1).resultado, Retorno.Resultado.ERROR, "No se puede agregar linea, no existe mensaje");
+        p.ver(so.insertarLineaPos(2, 2, 8).resultado, Retorno.Resultado.ERROR, "No se puede agregar linea, no existe linea");
         
+        //Resultado OK - Agregamos lineas al mensaje 2 de Pedro
+        p.ver(so.insertarLineaPos(2, 2, 2).resultado, Retorno.Resultado.OK, "Se agrega linea 2 en blanco al mensaje 2 de Pedro");
+        p.ver(so.insertarLineaPos(2, 2, 3).resultado, Retorno.Resultado.OK, "Se agrega linea 3 en blanco al mensaje 2 de Pedro");
+        p.ver(so.insertarLineaPos(2, 2, 4).resultado, Retorno.Resultado.OK, "Se agrega linea 4 en blanco al mensaje 2 de Pedro");
+        p.ver(so.insertarLineaPos(2, 1, 1).resultado, Retorno.Resultado.OK, "Se agrega linea 1 en blanco al mensaje 1 de Pedro");
+        System.out.println("Mensaje 1 de pedro \n");
+        so.imprimirTexto(2, 1);
+        
+        System.out.println("Mensaje 2 de pedro \n");
+        so.imprimirTexto(2, 2);
     //3.4
     System.out.println("##################################################################################3.4");
-        //Resultado OK - Borrar linea
+        //Resultado OK - Borrar linea en la posicion indicada 
+        //Parametros(int numOrigen, int numMsj, int posLinea)
+        p.ver(so.borrarLinea(2, 2, 4).resultado, Retorno.Resultado.OK, "Borramos linea 4 de mensaje 2 de Pedro");
+        
+        //Resultado ERROR - Borrar linea en posicion contacto no existe, el mensaje no existe y posicion no valida
+        p.ver(so.borrarLinea(8, 2, 3).resultado, Retorno.Resultado.ERROR, "No se puede borrar linea, no existe contacto");
+        p.ver(so.borrarLinea(2, 8, 3).resultado, Retorno.Resultado.ERROR, "No se puede borrar linea, no existe mensaje");
+        p.ver(so.borrarLinea(2, 2, 8).resultado, Retorno.Resultado.ERROR, "No se puede borrar linea, no existe posicion");
+        
+    //3.5
+    System.out.println("##################################################################################3.5");
+        //Resultado OK - Borrar todas las lineas del mensaje (forma recursiva)
+        //Parametros (int numOrigen, int numMsj)
+        p.ver(so.borrarTodo(2, 1).resultado, Retorno.Resultado.OK, "Borramos todas las lineas mensaje 1 de Pedro");
     }
 }
