@@ -173,13 +173,17 @@ public class AyED_Obligatorio {
         p.ver(so.insertarPlabraEnLinea(2, 2, 8, 1, "Hola").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, no existe linea");
         p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "prueba").resultado, Retorno.Resultado.ERROR, "No se puede agregar palabra, maximo 3 por linea");
 
+    
         //3.6
-        System.out.println("##################################################################################3.6");
-        //Primero agregamos las palabras en el 3.7
-        System.out.print("\n");
-        System.out.print("Ingresar pruebas de borrarOcurrenciasPalabraEnTexto");
-        System.out.print("\n");
-        System.out.print("\n");
+        System.out.println("##################################################################################3.6");  
+        so.insertarPlabraEnLinea(2, 2, 2, 1, "Prueba");
+        so.insertarPlabraEnLinea(2, 2, 2, 2, "Prueba");
+        so.imprimirTexto(2, 2);
+        //Resultado OK - Si se pudieron borrar las ocurrencias de la palabra con éxito.
+        //Parametros (int numOrigen, int numMsj, String palabraABorrar)
+        p.ver(so.borrarOcurrenciasPalabraEnTexto(2, 2, "Prueba").resultado, Retorno.Resultado.OK, "Se borro la palabra");
+        System.out.print("Mensaje 1 de pedro \n");
+        so.imprimirTexto(2, 2);
         
         //3.8
         System.out.println("##################################################################################3.8");
@@ -283,4 +287,5 @@ public class AyED_Obligatorio {
         System.out.print("\n");
         System.out.print("\n");
     }
+    
 }
