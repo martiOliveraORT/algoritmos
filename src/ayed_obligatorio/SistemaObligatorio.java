@@ -209,7 +209,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno insertarPlabraEnLinea(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && posLinea <= origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos ) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
             if (ll.obtenerPunteroElemento(posLinea).getLp().cantNodos >= 3) {
@@ -257,7 +257,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
                 if (!lp.esVacia()) {
                     NodoPalabra np = lp.getPrimero();
                     NodoPalabra palabra = lp.obtenerPunteroPalabra(palabraABorrar);
-                    for (int i = 0; i < lp.cantNodos + 1; i++) {
+                    for (int i = 0; i < lp.cantNodos + 1 && np !=null ; i++) {
                         if (np.getPalabra() == palabraABorrar) {
                             lp.borrarElemento(np.dato);
                         }
