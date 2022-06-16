@@ -556,7 +556,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
         if (nodoP != null) {
             for (int i = 0; i < listaP.cantNodos || nodoP != null; i++) {
                 if (!diccionario.buscarPalabra(nodoP.getPalabra())) {
-                    listaPNueva.agregarinicio(nodoP.getDato(), nodoP.getPalabra());
+                    listaPNueva.agregarfinal(nodoP.getDato(), nodoP.getPalabra());
                 }
                 nodoP = nodoP.getSiguiente();
             }
