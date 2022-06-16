@@ -253,6 +253,20 @@ public class AyED_Obligatorio {
         //Resultado OK - Ingresar Palabra Diccionario
         //Parametro (String palabraAIngresar)
         p.ver(so.ingresarPalabraDiccionario("Prueba").resultado, Retorno.Resultado.OK, "Se ingreso palabra Prueba a diccionario");
+        so.ingresarPalabraDiccionario("Hola");
+        so.ingresarPalabraDiccionario("Estacionando");
+        so.ingresarPalabraDiccionario("Llegando");
+        so.ingresarPalabraDiccionario("Te");
+        so.ingresarPalabraDiccionario("Toy");
+        so.ingresarPalabraDiccionario("Auto");
+        so.ingresarPalabraDiccionario("Ir");
+        so.ingresarPalabraDiccionario("Casa");
+        so.ingresarPalabraDiccionario("Hamburguesa");
+        so.ingresarPalabraDiccionario("Casa");
+        so.ingresarPalabraDiccionario("Hoja");
+        so.ingresarPalabraDiccionario("Hojalata");
+        so.ingresarPalabraDiccionario("Bosque");
+
         
         //Resultado ERROR - Ingresar palabra a diccionario con palabra ya existente
         p.ver(so.ingresarPalabraDiccionario("Prueba").resultado, Retorno.Resultado.ERROR, "Ya existe esa palabra en el diccionario");
@@ -268,10 +282,7 @@ public class AyED_Obligatorio {
         
         //3.14
         System.out.println("##################################################################################3.14");
-        System.out.print("\n");
-        System.out.print("Ingresar pruebas de imprimirDiccionario");
-        System.out.print("\n");
-        System.out.print("\n");
+        p.ver(so.imprimirDiccionario().resultado, Retorno.Resultado.OK, "Muestra diccionario");
         
         //3.15
         System.out.println("##################################################################################3.15");
@@ -285,7 +296,8 @@ public class AyED_Obligatorio {
         System.out.print("\n");
         System.out.print("Ingresar pruebas de cantidadDeMensajes");
         System.out.print("\n");
-        System.out.print("\n");
+        System.out.print("\n");       
+
     }
     
 }
