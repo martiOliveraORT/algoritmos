@@ -56,18 +56,15 @@ public class ListaDiccionario extends Lista{
         } else{
             if (dato>this.getUltimo().getDato()){
                 this.agregarfinal(dato,nombre);
-            }else{
+        }else{
                 NodoDiccionario nuevo=new NodoDiccionario(dato,nombre);
                 NodoDiccionario aux=this.getPrimero();
                 while (aux.getSiguiente()!=null && dato>= aux.siguiente.dato){
                     aux=aux.getSiguiente();
-                }
-                nuevo.setSiguiente(aux.getSiguiente());
-                aux.setSiguiente(nuevo);      
-                this.cantNodos++; // duda
-            }                        
+                }                
+            }
         }
-    }
+        }
     
     @Override
     public void borrarinicio() {

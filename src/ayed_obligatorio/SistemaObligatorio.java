@@ -1,6 +1,7 @@
 package ayed_obligatorio;
 
 import java.util.Date;
+import java.util.List;
 
 public class SistemaObligatorio implements ISistemaObligatorio {
 
@@ -160,7 +161,7 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno insertarLineaPos(int numOrigen, int numMsj, int posLinea) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if (origen != null && origen.getLm().buscarelemento(numMsj) && origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos+1 >= posLinea) {
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos + 1 >= posLinea) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);//ver obpunteroele
             ListaLinea ll = msj.getLl();
             ll.agregarordenado(posLinea);
@@ -210,48 +211,48 @@ public class SistemaObligatorio implements ISistemaObligatorio {
     @Override
     public Retorno borrarOcurrenciasPalabraEnTexto(int numOrigen, int numMsj, String palabraABorrar) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
-        if(origen != null && origen.getLm().buscarelemento(numMsj)){
+        if (origen != null && origen.getLm().buscarelemento(numMsj)) {
             NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
             ListaLinea ll = msj.getLl();
-            if(!ll.esVacia()){
+            if (!ll.esVacia()) {
                 ocurrencia(ll.getPrimero(), ll, palabraABorrar);
-                
+
                 return new Retorno(Retorno.Resultado.OK);
             }
         }
         return new Retorno(Retorno.Resultado.ERROR);
     }
 
-    public static void ocurrencia(NodoLinea nodo, ListaLinea ll, String palabra){
-        if(nodo.siguiente == null){
+    public static void ocurrencia(NodoLinea nodo, ListaLinea ll, String palabra) {
+        if (nodo.siguiente == null) {
             ListaPalabra lp = nodo.getLp();
-            if(!lp.esVacia()){
+            if (!lp.esVacia()) {
                 NodoPalabra np = lp.getPrimero();
                 NodoPalabra p = lp.obtenerPunteroPalabra(palabra);
-                for (int i = 0; i < lp.cantNodos+1 && np != null; i++){                    
-                    if (np.getPalabra() == palabra){
+                for (int i = 0; i < lp.cantNodos + 1 && np != null; i++) {
+                    if (np.getPalabra() == palabra) {
                         lp.borrarElemento(np.dato);
                     }
                     np = np.getSiguiente();
-                }               
-            } 
-        } else {            
+                }
+            }
+        } else {
             NodoLinea nd = nodo.siguiente;
             ocurrencia(nd, ll, palabra);
             ListaPalabra lp = nodo.getLp();
-            if(!lp.esVacia()){
+            if (!lp.esVacia()) {
                 NodoPalabra np = lp.getPrimero();
                 NodoPalabra p = lp.obtenerPunteroPalabra(palabra);
-                for (int i = 0; i < lp.cantNodos+1 && np != null; i++){
-                    if (np.getPalabra() == palabra){
+                for (int i = 0; i < lp.cantNodos + 1 && np != null; i++) {
+                    if (np.getPalabra() == palabra) {
                         lp.borrarElemento(np.dato);
                     }
                     np = np.getSiguiente();
-                }               
-            } 
+                }
+            }
         }
     }
-    
+
     @Override
     public Retorno insertarPlabraEnLinea(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
         NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
@@ -272,7 +273,23 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno insertarPalabraYDesplazar(int numOrigen, int numMsj, int posLinea, int posPalabra, String palabraAIngresar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen);
+        if (origen != null && origen.getLm().buscarelemento(numMsj) && posLinea <= origen.getLm().obtenerPunteroElemento(numMsj).getLl().cantNodos) {
+            NodoMensaje msj = origen.getLm().obtenerPunteroElemento(numMsj);
+            ListaLinea ll = msj.getLl();
+            NodoLinea linea = ll.obtenerPunteroElemento(posLinea);
+            if (ll.buscarelemento(posLinea)) {
+                if (linea.getLp().cantNodos < 3) {
+                    linea.getLp().agregarordenado(posPalabra, palabraAIngresar);
+                    return new Retorno(Retorno.Resultado.OK);
+                } else {
+                    ListaPalabra lp = linea.getLp();
+                    NodoPalabra ultima = lp.getUltimo();
+                    return insertarPalabraYDesplazar(numOrigen, numMsj, posLinea + 1, 1, ultima.palabra);
+                }
+            }
+        }
+        return new Retorno(Retorno.Resultado.ERROR);
     }
 
     @Override
@@ -367,12 +384,112 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno imprimirTextoIncorrecto() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto aux = contactos.getPrimero();
+        for (int i = 1; i < contactos.cantNodos || aux == null; i++) {
+            System.out.print(aux.getNombre() + "\n");
+            if (aux.getLm().esVacia()) {
+                System.out.print("No tiene mensajes \n");
+            } else {
+                ListaMensaje listaM = aux.getLm();
+                NodoMensaje nodoM = listaM.getPrimero();
+                while (nodoM != null) {
+
+                    mensajeTextoIncorrecto(nodoM);
+
+                    nodoM = nodoM.getSiguiente(); //Paso al siguiente mensaje
+                }
+            }
+            aux = aux.getSiguiente();//paso al siguiente contacto
+        }
+        return new Retorno(Retorno.Resultado.OK);
+    }
+
+    public void mensajeTextoIncorrecto(NodoMensaje n) {
+        ListaLinea listaL = n.getLl();  //me traigo la lista de lineas de ese nummsj
+        if (listaL.esVacia()) {
+            System.out.print("Texto vacio \n");
+        } else {
+            NodoLinea nl = listaL.primero;
+            int i = 1;
+            while (nl != null) {
+                if (nl != null) {
+                    ListaPalabra lp = existeEnDiccionario(nl.getLp());
+                    System.out.print(i + ": ");
+                    lp.listar();
+                    System.out.print("\n");
+                    i++;
+                }
+                nl = nl.siguiente;
+            }
+        }
+    }
+
+    public ListaPalabra existeEnDiccionario(ListaPalabra listaP) {
+        NodoPalabra nodoP = listaP.getPrimero();
+        ListaPalabra listaPNueva = new ListaPalabra(3);
+        if (nodoP != null) {
+            for (int i = 0; i < listaP.cantNodos || nodoP != null; i++) {
+                if (!diccionario.buscarPalabra(nodoP.getPalabra())) {
+                    listaPNueva.agregarinicio(nodoP.getDato(), nodoP.getPalabra());
+                }
+                nodoP = nodoP.getSiguiente();
+            }
+        }
+        return listaPNueva;
     }
 
     @Override
     public Retorno cantMensajes(int numOrigen) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NodoContacto origen = contactos.obtenerPunteroElemento(numOrigen); //obtengo el contacto origen
+        if (origen != null) {
+            ListaMensaje lm = origen.getLm();
+            if (!lm.esVacia()) {
+                FechaCantidad[] listaNueva;
+                listaNueva = new FechaCantidad[lm.cantNodos];
+                int k = 0;
+                NodoMensaje nodoMensaje = lm.getPrimero();
+                for (int i = 0; i < lm.cantNodos; i++) {
+                    FechaCantidad nuevo = new FechaCantidad(nodoMensaje.getFecha(), lm.cantidadMensajesPorFecha(nodoMensaje.getFecha()));
+                    if (!existeMensaje(listaNueva, nuevo)) {
+                        listaNueva[k] = nuevo;
+                        k++;
+                    }
+                    nodoMensaje = nodoMensaje.getSiguiente();
+                }
+                mostrarCantidad(listaNueva, origen.getNombre());
+            } else {
+                System.out.print("No tiene mensajes");
+            }
+            return new Retorno(Retorno.Resultado.OK);
+        }
+
+        return new Retorno(Retorno.Resultado.ERROR);
+    }
+
+    public static boolean existeMensaje(FechaCantidad[] l, FechaCantidad n) {
+        for (int i = 0; i < l.length; i++) {
+            if (l[i] != null && l[i].fecha == n.fecha) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void mostrarCantidad(FechaCantidad[] l, String nombre) {
+
+        for (int i = 0; i < l.length && l[i] != null; i++) {
+            Date fecha = l[i].fecha;
+            System.out.print("\t" + fecha.getDate() + "-" + fecha.getMonth() + " | ");
+        }
+        System.out.println("\n");
+        for (int i = 0; i < l.length && l[i] != null; i++) {
+            if (i == 0) {
+                System.out.print(nombre + "\t");
+            }
+            System.out.print(" " + l[i].cantidad + "   | ");
+        }
+        System.out.println("\n");
+
     }
 
 }

@@ -159,9 +159,9 @@ public class AyED_Obligatorio {
         //Mostramos mensaje 2 de Pedro, sin palabras
         System.out.print("Mensaje 2 de pedro \n");
         so.imprimirTexto(2, 2);
-        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "Hola").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
-        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "como").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
-        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 1, "estas?").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 3, "Hola").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 3, "como").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
+        p.ver(so.insertarPlabraEnLinea(2, 2, 1, 3, "estas?").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
         p.ver(so.insertarPlabraEnLinea(2, 2, 2, 1, "Prueba").resultado, Retorno.Resultado.OK, "Agregamos palabra en 1 linea, mensaje 2 de Pedro");
         //Mostramos mensaje 2 de Pedro con palabra agregada
         System.out.print("Mensaje 2 de pedro \n");
@@ -187,10 +187,7 @@ public class AyED_Obligatorio {
         
         //3.8
         System.out.println("##################################################################################3.8");
-        System.out.print("\n");
-        System.out.print("Ingresar pruebas de insertarPalabraYDesplazar");
-        System.out.print("\n");
-        System.out.print("\n");
+        //so.insertarPalabraYDesplazar(2, 2, 1, 1, "Prueba");
         
         //3.9
         System.out.println("##################################################################################3.9");
@@ -275,17 +272,50 @@ public class AyED_Obligatorio {
         
         //3.15
         System.out.println("##################################################################################3.15");
-        System.out.print("\n");
-        System.out.print("Ingresar pruebas de ImprimirTextoIncorrecto");
-        System.out.print("\n");
-        System.out.print("\n");
+        //Resultado OK - Imprimir texto incorrecto
+        so.ingresarPalabraDiccionario("Hola");
+        so.agregarMensaje(0, 1, fecha);
+        so.agregarMensaje(0, 1, fecha);
+        so.agregarMensaje(0, 4, fecha);
+        p.ver(so.imprimirTextoIncorrecto().resultado, Retorno.Resultado.OK, "Imprimir texto incorrecto");
         
         //4.1
         System.out.println("##################################################################################4.1");
-        System.out.print("\n");
-        System.out.print("Ingresar pruebas de cantidadDeMensajes");
-        System.out.print("\n");
-        System.out.print("\n");
+        Date fecha1 = new Date();
+        SimpleDateFormat formato1 = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            fecha1 = formato1.parse("25/03/2022");
+        } catch (ParseException ex) {
+            Logger.getLogger(AyED_Obligatorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Date fecha2 = new Date();
+        SimpleDateFormat formato2 = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            fecha2 = formato2.parse("26/03/2022");
+        } catch (ParseException ex) {
+            Logger.getLogger(AyED_Obligatorio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //Agregamos mensajes a Juan
+        so.agregarMensaje(0, 1, fecha);
+        so.agregarMensaje(0, 1, fecha1);
+        so.agregarMensaje(0, 1, fecha2);
+        
+        //Agregamos mensajes a Ana
+        so.agregarMensaje(0, 3, fecha);
+        so.agregarMensaje(0, 3, fecha1);
+        so.agregarMensaje(0, 3, fecha2);
+        
+        //Agregamos mensajes a Maria
+        so.agregarMensaje(0, 4, fecha1);
+        so.agregarMensaje(0, 4, fecha1);
+        so.agregarMensaje(0, 4, fecha1);
+        so.agregarMensaje(0, 4, fecha2);
+        
+        p.ver(so.cantMensajes(1).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Juan");
+        p.ver(so.cantMensajes(2).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Pedro");
+        p.ver(so.cantMensajes(3).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Ana");
+        p.ver(so.cantMensajes(4).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Maria");
     }
     
 }

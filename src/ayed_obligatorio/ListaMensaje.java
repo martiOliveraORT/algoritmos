@@ -193,4 +193,17 @@ public class ListaMensaje extends Lista{
         }
     }
     
+    public int cantidadMensajesPorFecha(Date fecha){
+        int cantidad = 0;
+        NodoMensaje nodo = this.getPrimero();
+        for(int i = 0; i < this.cantNodos; i++){
+            if(nodo.fecha == fecha){
+                cantidad++;
+            }
+            nodo = nodo.getSiguiente();
+        }
+        
+        return cantidad;
+    }
+    
 }
