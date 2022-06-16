@@ -49,10 +49,9 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno destruirSistemaMensajes() {
-        Retorno ret = null;
+        Retorno ret = new Retorno(Retorno.Resultado.OK);
         this.setContactos(null);
         this.setDiccionario(null);
-
         return ret;
     }
 

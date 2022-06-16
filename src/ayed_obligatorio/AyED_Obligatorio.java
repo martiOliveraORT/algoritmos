@@ -327,6 +327,10 @@ public class AyED_Obligatorio {
         p.ver(so.cantMensajes(2).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Pedro");
         p.ver(so.cantMensajes(3).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Ana");
         p.ver(so.cantMensajes(4).resultado, Retorno.Resultado.OK, "Mensajes de contacto 1 - Maria");
+        
+        //2.2
+        System.out.println("##################################################################################2.2");
+        p.ver(so.destruirSistemaMensajes().resultado, Retorno.Resultado.OK, "Se destruye sistema mensajes");
+        p.imprimirResultadosPrueba();
     }
-    
 }
