@@ -352,9 +352,10 @@ public class SistemaObligatorio implements ISistemaObligatorio {
 
     @Override
     public Retorno imprimirDiccionario() {
-        if (!diccionario.esVacia()) {
-            NodoDiccionario key = diccionario.getPrimero();
-            for (int i = 0; i < diccionario.cantNodos; i++) {
+        ListaDiccionario ordenado = ordenarDiccionario();
+        if (!ordenado.esVacia()) {
+            NodoDiccionario key = ordenado.getPrimero();
+            for (int i = 0; i < ordenado.cantNodos; i++) {
                 //TODO: Hay que mostralo ordenado
                 System.out.print(key.palabra + "\n");
                 key = key.getSiguiente();
@@ -363,6 +364,132 @@ public class SistemaObligatorio implements ISistemaObligatorio {
             System.out.print("Diccionario vacio \n");
         }
         return new Retorno(Retorno.Resultado.OK);
+    }  
+    
+    public ListaDiccionario ordenarDiccionario() {        
+        ListaDiccionario ordenado = new ListaDiccionario();
+        if (diccionario.cantNodos > 1) {
+            NodoDiccionario nd = diccionario.getPrimero();
+            for (int i = 0; i < diccionario.cantNodos; i++) {
+                compararyagregar(ordenado, nd.palabra);
+                nd = nd.siguiente;
+            }
+        }
+        return ordenado;
+    }
+
+    public static void compararyagregar(ListaDiccionario ord, String palabra){
+        boolean agregado = false;
+        NodoDiccionario nd = new NodoDiccionario(0, palabra);
+        if(ord.esVacia()){
+            ord.setPrimero(nd);
+            ord.setUltimo(nd);
+            ord.cantNodos++;
+            agregado = true;
+        }
+        NodoDiccionario ndord = ord.getPrimero();
+        while(!agregado){
+            String palabra1, palabra2;
+            palabra1 = ndord.palabra;
+            palabra2 = nd.palabra;
+            int cm = comparar(palabra1, palabra2);
+            if(cm == 0){ // 0 - son iguales no agrega nada
+                agregado = true;
+            } else if(cm == -1){ // -1 - palabra1 < palabra2
+                boolean ok = false;
+                for(int i = 0; i < ord.cantNodos && !ok; i++){ 
+                    if(ndord.siguiente == null){
+                        ord.ultimo.setSiguiente(nd);
+                        ord.setUltimo(nd);
+                        ord.cantNodos++;
+                        break;
+                    }
+                    int comp = comparar(ndord.siguiente.palabra, palabra2);
+                    if(i == ord.cantNodos-1 && comp != 0){
+                        ord.ultimo.setSiguiente(nd);
+                        ord.setUltimo(nd);
+                        ord.cantNodos++;
+                        break;
+                    }
+                    if(comp == -1){
+                        ndord = ndord.siguiente;
+                    } else if(comp == 1){
+                        nd.setSiguiente(ndord.siguiente);
+                        ndord.setSiguiente(nd);
+                        ord.cantNodos++;
+                        ok = true;
+                    }
+                }
+            } else if(cm == 1){ // 1 - palabra2 < palabra1
+                //solo se puede dar en el primer caso si no se dieron los otros
+                nd.setSiguiente(ord.getPrimero());
+                ord.setPrimero(nd);
+                ord.cantNodos++;
+                agregado = true;
+            }
+            ndord = ndord.siguiente;
+        }
+    }
+    
+    public static char[] convertirlistaletras(String palabra){
+        int largo = palabra.length();
+        palabra.toLowerCase();
+        char letras[] = new char[largo];
+        for(int i = 0; i < largo; i++){
+            letras[i] = palabra.charAt(i);
+        }
+        return letras;
+    }
+    
+    public static int comparar(String a, String b){
+        char[] la = convertirlistaletras(a);
+        char[] lb = convertirlistaletras(b);
+        int ret = 0;
+        int largoa = la.length;
+        int largob = lb.length;
+        if(a == b){
+            return 0;
+        }
+        int i = 0;   
+        int j = 0;
+        boolean salir = false;
+        
+        if(largoa > largob){
+            for (; i < largoa && !salir; i++) {
+                for (; j < largob; j++) {
+                    if (la[i] < lb[j]) {
+                        return ret = -1;
+                    } else if (la[i] > lb[j]) {
+                        return ret = 1;
+                    } else if(i+1 < largoa){                    
+                        i++;
+                    } else if(i+1 > largoa){
+                        salir = true;
+                    }
+                }
+            }
+            if (j < i) {
+                ret = 1;
+            }            
+        } else{
+            for(; i < largob && !salir; i++){
+                for(; j < largoa; j++){
+                    if(la[j] < lb[i]){
+                        return ret = -1;
+                    } else if(la[j] > lb[i]){
+                        return ret = 1;
+                    } else if(i+1 < largob){
+                        i++;
+                    } else if(i+1 > largob){
+                        salir = true;
+                    }
+                }
+            }
+            if (j < i){
+                ret = -1;
+            }
+        }
+        return ret;
     }
 
     @Override
